@@ -1,18 +1,22 @@
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 
-import { StyleSheet, SafeAreaView, Text, View } from "react-native";
+import { StyleSheet, SafeAreaView, Text, View, Pressable } from "react-native";
 
-const DAYS = 6;
+const DAYS = 7;
 
-export default function App() {
+type Prop = {
+  onDateSelect: (date: Dayjs) => void;
+};
+
+const Header = (props: Prop) => {
   // const initiate = () =>{
   //   var data = [];
   //   for (var i = 0; i < 7; i++) {
   //     data.push({date: dayjs().startOf('year'), []})
   //   }
   // }
-
+  const { onDateSelect } = props;
   const [dates, setDates] = React.useState<Dayjs[]>([]);
 
   React.useEffect(() => {
@@ -28,9 +32,9 @@ export default function App() {
     return (
       <View style={styles.column} key={`date-${date}`}>
         <Text style={styles.day}>{date.format("ddd").toLocaleUpperCase()}</Text>
-        <View style={styles.selected}>
+        <Pressable style={styles.selected} onPress={() => onDateSelect(date)}>
           <Text>{date.date().toString()}</Text>
-        </View>
+        </Pressable>
       </View>
     );
   };
@@ -38,22 +42,24 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-      <Text style={styles.title}>Calendar</Text>
-      <View style={styles.row}>
-        {dates.map((date) => {
-          return _renderDay(date);
-        })}
-      </View>
+        <Text style={styles.title}>Calendar</Text>
+        <View style={styles.row}>
+          {dates.map((date) => {
+            return _renderDay(date);
+          })}
+        </View>
       </View>
     </SafeAreaView>
   );
-}
+};
+
+export { Header };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
   },
-  header:{
+  header: {
     padding: 20,
     backgroundColor: "white",
     borderBottomRightRadius: 20,
@@ -83,6 +89,6 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
 });
